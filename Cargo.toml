@@ -1,8 +1,9 @@
 [package]
-name = "graph_node"
+name = "graph_note"
 version = "0.1.0"
 authors = ["Sam Nolan <samnolan555@gmail.com>"]
 edition = "2018"
 
 [dependencies]
 ncurses="5.99.0"
+sqlite="0.24.0"
