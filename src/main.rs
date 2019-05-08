@@ -13,8 +13,6 @@
 extern crate graph_note;
 
 fn main(){
-    let database = graph_note::database::create("test.db");
-
-    graph_note::view::display(database);
+    graph_note::start(String::from("test.db"));
 }
 
