@@ -21,6 +21,7 @@ pub enum Key {
 }
 
 fn view_application(view_model: ViewModel){
+    ncurses::clear();
     ncurses::mv(view_model.cursor_x, view_model.cursor_y);
     ncurses::addstr(&view_model.buffer);
     ncurses::refresh();
@@ -63,7 +64,7 @@ fn start_application(db: database::Database){
         // Get key and update
         ch = ncurses::getch();
         let action = app.subscribe(&char_to_key(ch));
-        app = app.update(action);
+        app.update(action);
     }
 
     ncurses::endwin();

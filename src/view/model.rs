@@ -1,35 +1,27 @@
+use crate::Key;
 
-
-use crate::database::Database;
-use super::ViewMode;
-use super::ViewType;
-use super::View;
-
-pub struct ModelMode<'a> {
-    db: &'a Database,
-    view: &'a View<'a>,
+pub struct ModelMode {
+    buffer: String
 }
 
-// Normal mode
-impl<'a> ViewMode for ModelMode<'a> {
-    fn onKey(&self, ch: &u32){
-        match std::char::from_u32(*ch){
-            Some(x) => {
-                match x {
-                    'q' => {
-                        self.view.exit();
-                    },
-                    'n' => {
-                        self.view.set_mode(ViewType::NORMAL);
-                    }
-                    _ => {}
-                }        
-            },
-            None => {}
-        }
+pub enum ModelModeMessage {
+    Nothing
+}
+
+impl ModelMode {
+    pub fn init() -> Self {
+        Self {buffer: String::from("Welcome to models!")}
     }
 
-    fn onEnter(&self){
-        self.view.set_buffer(&String::from("Welcome to Model mode!"));
+    pub fn subscribe(&self,key: &Key) -> ModelModeMessage{
+        use ModelModeMessage::*;
+        Nothing
+    }
+
+    pub fn update(&self, message: ModelModeMessage) {
+        
+    }
+    pub fn view(&self) -> String{
+        return self.buffer.clone();
     }
 }
