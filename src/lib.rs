@@ -1,8 +1,9 @@
 
-extern crate ncurses;
-
-pub mod database;
 pub mod view;
+pub mod database;
+pub mod model;
+
+use model::Application;
 
 pub struct ViewModel {
     cursor_x: i32,
@@ -18,6 +19,10 @@ pub enum Key {
     Down,
     Other,
     Character(char),
+}
+
+fn subscribe(model: &mut Application, key: Key){
+    model.send_key(key);
 }
 
 fn view_application(view_model: ViewModel){
@@ -51,20 +56,16 @@ fn start_application(db: database::Database){
     ncurses::cbreak();
     ncurses::keypad(ncurses::stdscr(), true);
     ncurses::noecho();
-    let mut app = view::Application::init(db);
-    let mut ch;
+    let mut model = Application::init();
+
     loop {
-        // View application
-        let view_model = app.view();
+        let view_model = view::view(&model);     
         if view_model.exiting {
             break;
         }
         view_application(view_model);
-
-        // Get key and update
-        ch = ncurses::getch();
-        let action = app.subscribe(&char_to_key(ch));
-        app.update(action);
+        let ch = ncurses::getch();
+        subscribe(&mut model, char_to_key(ch));
     }
 
     ncurses::endwin();
@@ -81,4 +82,3 @@ pub fn start(filename: String){
         }
     }
 }
-
