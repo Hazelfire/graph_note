@@ -1,3 +1,4 @@
+use crate::fields::TextField;
 //use std::collections::HashMap;
 pub enum FieldType {
     String,
@@ -12,16 +13,14 @@ pub trait Node {
 }
 
 pub struct Model {
-    pub name: String,
-    pub adding: bool,
+    pub name: TextField,
 //    pub fields: HashMap<String, FieldType>
 }
 
 impl Model {
     pub fn new() -> Self {
         Self {
-            name: String::from("default"),
-            adding: true
+            name: TextField::new(String::from("default")),
         }
     }
 }
@@ -33,17 +32,8 @@ pub struct List {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
 
     #[test]
     fn test_create_metamodel(){
-        //let mut modelfields = HashMap::new();
-        //modelfields.insert(String::from("name"), FieldType::String);
-       // modelfields.insert(String::from("fields"), FieldType::Map(Box::new(FieldType::String)));
-        let metamodel = Model {
-            name: String::from("model"),
-            adding: true,
- //           fields: modelfields,
-        };
     }
 }

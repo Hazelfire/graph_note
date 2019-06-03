@@ -3,8 +3,6 @@ use super::Key;
 use super::database::Database;
 use crate::model::Model;
 
-mod fields;
-mod modelmode;
 
 pub enum ViewMode {
     Normal,
@@ -30,20 +28,28 @@ impl Application {
     }
 
     pub fn send_key(&mut self, key: Key){
+        let mut active_model_count = 0;
+        for model in &mut self.database.models{
+            if model.name.get_active() {
+                active_model_count += 1;
+                model.name.send_key(&key);
+            }
+        }
+        if active_model_count == 0 {
+            match key {
+                Key::Character('m') => match self.mode {
+                    ViewMode::Normal => self.mode = ViewMode::Model,
+                    ViewMode::Model => self.mode = ViewMode::Normal
+                },
+                Key::Character('a') => {
+                    self.database.models.push(Model::new())
+                },
+                _ => {}
+            };
 
-        match key {
-            Key::Character('m') => match self.mode {
-                ViewMode::Normal => self.mode = ViewMode::Model,
-                ViewMode::Model => self.mode = ViewMode::Normal
-            },
-            Key::Character('a') => {
-                self.database.models.push(Model::new())
-            },
-            _ => {}
-        };
-
-        self.exiting = match key { Key::Character(key) => key == 'q', _ => {false} };
-        self.cursor.update(key);
+            self.exiting = match key { Key::Character(key) => key == 'q', _ => {false} };
+            self.cursor.update(key);
+        }
     }
 }
 

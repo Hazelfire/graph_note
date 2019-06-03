@@ -2,6 +2,7 @@ extern crate sqlite;
 
 use std::vec::Vec;
 use super::model::Model;
+use crate::fields::TextField;
 
 pub enum FieldType {
     String,
@@ -26,7 +27,7 @@ impl Database {
         let mut re = Vec::new();
         connection.iterate("select name from sqlite_master where type='table' and name not like 'sqlite_%'", |pairs| {
             for &(_, value) in pairs.iter() {
-                re.push(Model{name: String::from(value.unwrap()), adding: false});
+                re.push(Model{name: TextField::new(String::from(value.unwrap()))});
             }
             true
         }).unwrap_or(());

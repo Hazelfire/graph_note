@@ -2,16 +2,20 @@ use crate::Key;
 
 pub struct TextField {
     buffer: String,
+    active: bool,
 }
 
 impl TextField {
-    pub fn send_key(&mut self, key: Key){
+    pub fn send_key(&mut self, key: &Key){
         match key {
             Key::Character(ch) => {
-                self.buffer.push(ch)
+                self.buffer.push(*ch)
             },
-            Key::Escape => {
-
+            Key::Backspace => {
+                self.buffer.pop();
+            }
+            Key::Enter => {
+                self.active = false;
             }
             _ => {}
         }
@@ -21,9 +25,14 @@ impl TextField {
         return self.buffer.clone();
     }
 
-    pub fn new() -> Self{
+    pub fn get_active(&self) -> bool {
+        self.active
+    }
+
+    pub fn new(buffer: String) -> Self{
         return Self {
-            buffer: String::from("")
+            buffer: buffer,
+            active: true
         }
     }
 }
@@ -35,7 +44,7 @@ mod tests {
     #[test]
     fn test_send_keys(){
         use crate::Key::*;
-        let mut field = TextField::new();
+        let mut field = TextField::new(String::from(""));
         field.send_key(Character('c'));
         field.send_key(Character('a'));
         field.send_key(Character('t'));

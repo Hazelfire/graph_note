@@ -32,7 +32,7 @@ fn view_models(models: &Vec<Model>) -> String{
     else {
         let mut buffer = String::from("");
         for model in models {
-            buffer.push_str(&format!("- name: {}\n", &model.name))
+            buffer.push_str(&format!("- name: {}\n", &model.name.to_string()))
         }
         buffer
     }

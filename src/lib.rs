@@ -3,6 +3,7 @@ pub mod database;
 pub mod application;
 pub mod view;
 pub mod model;
+pub mod fields;
 
 use application::Application;
 
@@ -20,6 +21,8 @@ pub enum Key {
     Up,
     Down,
     Escape,
+    Backspace,
+    Enter,
     Other,
     Character(char),
 }
@@ -38,19 +41,21 @@ fn view_application(view_model: ViewModel){
 fn char_to_key(ch: i32) -> Key{
     use ncurses::*;
     use Key::*;
-    match std::char::from_u32(ch as u32){
-        Some(x) => {
-            return Character(x);
-        }
-        None => {
-            match ch {
-                KEY_RIGHT => Right,
-                KEY_LEFT => Left,
-                KEY_UP => Up,
-                KEY_DOWN => Down,
-                27 => Escape,
-                _ => Other
-            }
+    match ch {
+        KEY_RIGHT => Right,
+        KEY_LEFT => Left,
+        KEY_UP => Up,
+        KEY_DOWN => Down,
+        KEY_BACKSPACE => Backspace,
+        127 => Backspace,
+        KEY_ENTER => Enter,
+        10 => Enter,
+        27 => Escape,
+        _ => match std::char::from_u32(ch as u32){
+            Some(x) => {
+                return Character(x);
+            },
+            None => Other
         }
     }
 }
