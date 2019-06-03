@@ -1,5 +1,11 @@
 use super::Key;
 
+use super::database::Database;
+use crate::model::Model;
+
+mod fields;
+mod modelmode;
+
 pub enum ViewMode {
     Normal,
     Model
@@ -8,15 +14,18 @@ pub enum ViewMode {
 pub struct Application {
     pub mode: ViewMode,
     pub cursor: Cursor,
+    pub database: Database,
     pub exiting : bool,
 }
 
+
 impl Application {
-    pub fn init() -> Self {
+    pub fn init(db: Database) -> Self {
         return Self{
             mode: ViewMode::Normal,
+            database: db,
             cursor: Cursor::init(),
-            exiting: false
+            exiting: false,
         }
     }
 
@@ -26,6 +35,9 @@ impl Application {
             Key::Character('m') => match self.mode {
                 ViewMode::Normal => self.mode = ViewMode::Model,
                 ViewMode::Model => self.mode = ViewMode::Normal
+            },
+            Key::Character('a') => {
+                self.database.models.push(Model::new())
             },
             _ => {}
         };

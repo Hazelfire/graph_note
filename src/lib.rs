@@ -1,9 +1,11 @@
 
-pub mod view;
 pub mod database;
+pub mod application;
+pub mod view;
 pub mod model;
 
-use model::Application;
+use application::Application;
+
 
 pub struct ViewModel {
     cursor_x: i32,
@@ -17,6 +19,7 @@ pub enum Key {
     Left,
     Up,
     Down,
+    Escape,
     Other,
     Character(char),
 }
@@ -45,6 +48,7 @@ fn char_to_key(ch: i32) -> Key{
                 KEY_LEFT => Left,
                 KEY_UP => Up,
                 KEY_DOWN => Down,
+                27 => Escape,
                 _ => Other
             }
         }
@@ -56,7 +60,7 @@ fn start_application(db: database::Database){
     ncurses::cbreak();
     ncurses::keypad(ncurses::stdscr(), true);
     ncurses::noecho();
-    let mut model = Application::init();
+    let mut model = Application::init(db);
 
     loop {
         let view_model = view::view(&model);     
